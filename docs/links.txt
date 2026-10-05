@@ -9,11 +9,14 @@
 # ============================================
 
 [cn]
-https://www.bilibili.com/video/BV1kwYP6PEtT/?spm_id_from=333.337.search-card.all.click 冰冰冰1000小时
+https://www.bilibili.com/video/BV1kwYP6PEtT 冰冰冰1000小时
 https://www.bilibili.com/video/BV1GJ411x7h7 你被骗了
 # https://www.4399.com/ 4399 小游戏
 https://www.bilibili.com/video/BV1CKYK6uE4B wjw 爱上了 jjs
 https://www.bilibili.com/video/BV1t8hG6FE53 陌生链接都敢乱点
+https://www.bilibili.com/video/BV1PzfNBME4o B站最深处
+https://www.bilibili.com/video/BV1xsRSBQENA 奶龙捧腹大笑
+https://www.bilibili.com/video/BV1nG4y197jd 诈骗化学老师
 
 [intl]
 https://www.youtube.com/watch?v=dQw4w9WgXcQ 经典 Rickroll
