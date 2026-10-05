@@ -411,7 +411,8 @@
         const tr = document.createElement("tr");
 
         const tdNo = document.createElement("td");
-        tdNo.textContent = no;
+        // 序号前加池的英文缩写：CN / INT
+        tdNo.textContent = (key === "cn" ? "CN" : "INT") + "-" + no;
 
         const tdDesc = document.createElement("td");
         tdDesc.textContent = item.desc || (lang === "zh" ? "（无简介）" : "(no description)");
