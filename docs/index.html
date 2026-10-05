@@ -105,6 +105,127 @@
       font-size: 14px;
       color: #555;
     }
+    .links-tools {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .search-input {
+      width: 100%;
+      max-width: 320px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+    }
+    .search-input:focus { border-color: #4f46e5; }
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .filter-btn {
+      padding: 8px 18px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #555;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .filter-btn:hover { color: #4f46e5; border-color: #4f46e5; }
+    .filter-btn.active {
+      color: #fff;
+      background: #4f46e5;
+      border-color: #4f46e5;
+    }
+    .table-wrap { overflow-x: auto; }
+    .links-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+    .links-table th, .links-table td {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid #eef0f3;
+    }
+    .links-table th {
+      color: #888;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .links-table tr:last-child td { border-bottom: none; }
+    .links-table tbody tr:hover td { background: #fafbff; }
+    .table-wrap .links-empty {
+      padding: 28px 0;
+      text-align: center;
+      color: #999;
+    }
+    .url-text {
+      display: inline-block;
+      max-width: 320px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: middle;
+      color: #999;
+    }
+    .tag {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 1px 10px;
+      font-size: 12px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4f46e5;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .copy-mini {
+      padding: 5px 14px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #4f46e5;
+      background: #fff;
+      border: 1px solid #4f46e5;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .copy-mini:hover { background: #eef2ff; }
+    .pager {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+      font-size: 14px;
+      color: #666;
+    }
+    .pager button {
+      padding: 6px 16px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #4f46e5;
+      background: #fff;
+      border: 1px solid #4f46e5;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .pager button:disabled {
+      color: #bbb;
+      border-color: #ddd;
+      background: #fafafa;
+      cursor: not-allowed;
+    }
     footer {
       text-align: center;
       padding: 24px;
@@ -158,6 +279,33 @@
     </section>
 
     <section>
+      <h2 data-en="Link list">链接一览</h2>
+      <p data-en="All prank links live in links.txt. Browse them here, search by keyword, and copy the link with its parameter to send someone to exactly that one.">所有整蛊链接都放在 links.txt 里，这里可以查看每条链接的内容、按关键词搜索，也可以直接复制带参数的链接，精准整蛊某一个人。</p>
+      <div class="links-tools">
+        <input type="text" id="searchInput" class="search-input" placeholder="搜索链接或内容…">
+        <div class="filter-group" id="filterGroup">
+          <button class="filter-btn active" data-key="all" data-en="All">全部</button>
+          <button class="filter-btn" data-key="cn" data-en="CN">国内</button>
+          <button class="filter-btn" data-key="intl" data-en="Intl">国际</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="links-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-en="Content">内容</th>
+              <th data-en="Link">链接</th>
+              <th data-en="Action">操作</th>
+            </tr>
+          </thead>
+          <tbody id="linksBody"></tbody>
+        </table>
+      </div>
+      <div class="pager" id="pager"></div>
+    </section>
+
+    <section>
       <h2 data-en="Friendly reminder">温馨提示</h2>
       <div class="notice" data-en="This project is for fun only. Don’t use it to fake phishing links, harass people, or break the law. Keep the prank reasonable — your friends matter more than the joke.">
         本项目仅供娱乐，请勿用于伪装钓鱼链接、骚扰或任何违法行为。整蛊有度，玩笑别开过头，朋友比乐子重要。
@@ -179,6 +327,14 @@
     const tryBtn = document.getElementById("tryBtn");
     const copyBtn = document.getElementById("copyBtn");
     const langSwitch = document.getElementById("langSwitch");
+    const searchInput = document.getElementById("searchInput");
+    const filterGroup = document.getElementById("filterGroup");
+    const pager = document.getElementById("pager");
+    const linksBody = document.getElementById("linksBody");
+    let poolsData = null;
+    let filterKey = "all"; // 全部 / cn / intl
+    let page = 1;          // 当前页码
+    const PAGE_SIZE = 10;  // 每页条数
 
     function applyLang(next) {
       lang = next;
@@ -190,6 +346,9 @@
       // 中文访客去国内版，英文访客去国际版
       tryBtn.href = lang === "zh" ? "rdcn.html" : "rd.html";
       langSwitch.textContent = lang === "zh" ? "EN" : "中文";
+      // 表格里的动态文案跟随语言
+      searchInput.placeholder = lang === "zh" ? "搜索链接或内容…" : "Search links or content…";
+      renderLinks();
     }
 
     langSwitch.addEventListener("click", () => {
@@ -202,6 +361,149 @@
         .then(() => { copyBtn.textContent = lang === "zh" ? "已复制！" : "Copied!"; })
         .catch(() => { copyBtn.textContent = lang === "zh" ? "复制失败" : "Copy failed"; })
         .finally(() => setTimeout(() => applyLang(lang), 1200));
+    });
+
+    // ===== 链接一览：读取 links.txt，渲染成可搜索的表格 =====
+    // 解析 links.txt：[xxx] 分节，一行一个链接，空格后为简介，以 # 开头的行忽略
+    function parseLinks(text) {
+      const pools = {};
+      let current = null;
+      text.replace(/^\uFEFF/, "").split(/\r?\n/).forEach((line) => {
+        line = line.trim();
+        if (!line || line.startsWith("#")) return;
+        const section = line.match(/^\[(\w+)\]$/);
+        if (section) {
+          current = section[1];
+          pools[current] = pools[current] || [];
+          return;
+        }
+        const m = line.match(/^(https?:\/\/\S+)\s*(.*)$/i);
+        if (current && m) pools[current].push({ url: m[1], desc: m[2] });
+      });
+      return pools;
+    }
+
+    // cn 池对应 rdcn.html，intl 池对应 rd.html；序号按各自池计算
+    const POOLS = [["cn", "rdcn.html"], ["intl", "rd.html"]];
+
+    function renderLinks() {
+      if (!poolsData) return;
+      const q = searchInput.value.trim().toLowerCase();
+
+      // 先按筛选和搜索条件收集所有行
+      const rows = [];
+      POOLS.forEach(([key, pageFile]) => {
+        if (filterKey !== "all" && key !== filterKey) return;
+        (poolsData[key] || []).forEach((item, i) => {
+          const no = i + 1;
+          if (q && !item.url.toLowerCase().includes(q) && !(item.desc || "").toLowerCase().includes(q)) return;
+          rows.push({ no, key, pageFile, item });
+        });
+      });
+
+      // 每页 10 条
+      const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+      if (page > totalPages) page = totalPages;
+      const pageRows = rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+      linksBody.innerHTML = "";
+      pageRows.forEach(({ no, key, pageFile, item }) => {
+        const tr = document.createElement("tr");
+
+        const tdNo = document.createElement("td");
+        tdNo.textContent = no;
+
+        const tdDesc = document.createElement("td");
+        tdDesc.textContent = item.desc || (lang === "zh" ? "（无简介）" : "(no description)");
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = lang === "zh" ? (key === "cn" ? "国内" : "国际") : (key === "cn" ? "CN" : "Intl");
+        tdDesc.appendChild(tag);
+
+        const tdUrl = document.createElement("td");
+        const urlText = document.createElement("span");
+        urlText.className = "url-text";
+        urlText.textContent = item.url;
+        urlText.title = item.url;
+        tdUrl.appendChild(urlText);
+
+        const tdCopy = document.createElement("td");
+        const btn = document.createElement("button");
+        btn.className = "copy-mini";
+        btn.textContent = lang === "zh" ? "复制链接" : "Copy";
+        // 复制带 ?i= 参数的链接，对方打开就固定跳这一条
+        const shareUrl = new URL(pageFile + "?i=" + no, location.href).href;
+        btn.addEventListener("click", () => {
+          navigator.clipboard.writeText(shareUrl)
+            .then(() => { btn.textContent = lang === "zh" ? "已复制！" : "Copied!"; })
+            .catch(() => { btn.textContent = lang === "zh" ? "复制失败" : "Failed"; })
+            .finally(() => setTimeout(renderLinks, 1200));
+        });
+        tdCopy.appendChild(btn);
+
+        tr.append(tdNo, tdDesc, tdUrl, tdCopy);
+        linksBody.appendChild(tr);
+      });
+
+      if (!rows.length) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 4;
+        td.className = "links-empty";
+        td.textContent = lang === "zh" ? "没有匹配的链接" : "No matching links";
+        tr.appendChild(td);
+        linksBody.appendChild(tr);
+        pager.innerHTML = "";
+        return;
+      }
+
+      // 分页条
+      pager.innerHTML = "";
+      const prev = document.createElement("button");
+      prev.textContent = lang === "zh" ? "上一页" : "Prev";
+      prev.disabled = page <= 1;
+      prev.addEventListener("click", () => { page--; renderLinks(); });
+
+      const info = document.createElement("span");
+      info.textContent = lang === "zh" ? "第 " + page + " / " + totalPages + " 页" : "Page " + page + " / " + totalPages;
+
+      const next = document.createElement("button");
+      next.textContent = lang === "zh" ? "下一页" : "Next";
+      next.disabled = page >= totalPages;
+      next.addEventListener("click", () => { page++; renderLinks(); });
+
+      pager.append(prev, info, next);
+    }
+
+    fetch("links.txt", { cache: "no-store" })
+      .then((res) => res.text())
+      .then((text) => {
+        poolsData = parseLinks(text);
+        renderLinks();
+      })
+      .catch(() => {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 4;
+        td.className = "links-empty";
+        td.textContent = lang === "zh" ? "links.txt 加载失败" : "Failed to load links.txt";
+        tr.appendChild(td);
+        linksBody.appendChild(tr);
+      });
+
+    // 筛选：全部 / 国内 / 国际
+    filterGroup.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        filterKey = btn.dataset.key;
+        page = 1;
+        filterGroup.querySelectorAll(".filter-btn").forEach((b) => b.classList.toggle("active", b === btn));
+        renderLinks();
+      });
+    });
+
+    searchInput.addEventListener("input", () => {
+      page = 1;
+      renderLinks();
     });
   </script>
 </body>

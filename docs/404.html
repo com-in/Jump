@@ -39,7 +39,7 @@
     // 地址后面随便加路径或参数也能正常跳转
     // 例如 https://ctj.qzz.io/rdcn.html/redict?=iaooiodaj
 
-    // 解析 links.txt：[xxx] 分节，一行一个链接，以 # 开头的行忽略
+    // 解析 links.txt：[xxx] 分节，一行一个链接，空格后为简介，以 # 开头的行忽略
     function parseLinks(text) {
       const pools = {};
       let current = null;
@@ -52,7 +52,8 @@
           pools[current] = pools[current] || [];
           return;
         }
-        if (current && /^https?:\/\//i.test(line)) pools[current].push(line);
+        const m = line.match(/^(https?:\/\/\S+)\s*(.*)$/i);
+        if (current && m) pools[current].push({ url: m[1], desc: m[2] });
       });
       return pools;
     }
@@ -66,8 +67,9 @@
         const pool = location.pathname.includes("rd.html") ? pools.intl : pools.cn;
         if (!pool || !pool.length) throw new Error("links.txt 没有可用的链接");
 
-        // 随机挑一个目标
-        const target = pool[Math.floor(Math.random() * pool.length)];
+        // ?i=序号 指定 links.txt 中第 N 条链接（从 1 开始）；无效或未指定时随机
+        const idx = parseInt(new URLSearchParams(location.search).get("i"), 10);
+        const target = (pool[idx - 1] || pool[Math.floor(Math.random() * pool.length)]).url;
 
         // 停顿 1 秒后跳转；用 replace，让对方按返回键回不到本页
         setTimeout(() => {
