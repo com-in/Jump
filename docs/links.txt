@@ -7,11 +7,14 @@
 # ============================================
 
 [cn]
-https://www.bilibili.com/video/BV1kwYP6PEtT/?spm_id_from=333.337.search-card.all.click
+https://www.bilibili.com/video/BV1kwYP6PEtT
 https://www.bilibili.com/video/BV1GJ411x7h7
 # https://www.4399.com/
 https://www.bilibili.com/video/BV1CKYK6uE4B
 https://www.bilibili.com/video/BV1t8hG6FE53
+https://www.bilibili.com/video/BV1PzfNBME4o
+https://www.bilibili.com/video/BV1xsRSBQENA
+https://www.bilibili.com/video/BV1nG4y197jd
 
 [intl]
 https://www.youtube.com/watch?v=dQw4w9WgXcQ
