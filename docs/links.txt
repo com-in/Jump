@@ -1,21 +1,23 @@
 # ============================================
-# Jump 整蛊链接池 —— 三个页面统一读取这里
+# Jump 整蛊链接池 —— 所有页面统一读取这里
 #   [cn]   国内池（rdcn.html、404 兜底页使用）
 #   [intl] 国际池（rd.html 使用）
-# 用法：一行一个链接，改完直接上传即可
+# 用法：一行一个链接，链接后空一格写简介（首页表格里会展示）
+# 指定跳转：链接后加 ?i=序号（从 1 开始），可跳过随机直接跳第 N 条
+# 例如 rdcn.html?i=2 或 rdcn.html/redict?i=3
 # 以 # 开头的行是注释，不会生效
 # ============================================
 
 [cn]
-https://www.bilibili.com/video/BV1kwYP6PEtT/?spm_id_from=333.337.search-card.all.click
-https://www.bilibili.com/video/BV1GJ411x7h7
-# https://www.4399.com/
-https://www.bilibili.com/video/BV1CKYK6uE4B
-https://www.bilibili.com/video/BV1t8hG6FE53
+https://www.bilibili.com/video/BV1kwYP6PEtT/?spm_id_from=333.337.search-card.all.click 冰冰冰1000小时
+https://www.bilibili.com/video/BV1GJ411x7h7 你被骗了
+# https://www.4399.com/ 4399 小游戏
+https://www.bilibili.com/video/BV1CKYK6uE4B wjw 爱上了 jjs
+https://www.bilibili.com/video/BV1t8hG6FE53 陌生链接都敢乱点
 
 [intl]
-https://www.youtube.com/watch?v=dQw4w9WgXcQ
-https://www.youtube.com/watch?v=oHg5SJYRHA0
-https://www.nyan.cat/
-https://cat-bounce.com/
-https://theuselessweb.com/
+https://www.youtube.com/watch?v=dQw4w9WgXcQ 经典 Rickroll
+https://www.youtube.com/watch?v=oHg5SJYRHA0 另一个 Rickroll 版本
+https://www.nyan.cat/ 彩虹猫
+https://cat-bounce.com/ 满屏弹跳猫
+https://theuselessweb.com/ 随机无用网站
